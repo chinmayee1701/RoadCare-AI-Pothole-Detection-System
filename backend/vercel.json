@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "env": {
+    "MONGODB_URI": "@mongodb_uri",
+    "MONGODB_DB_NAME": "roadcare_prod",
+    "JWT_SECRET": "@jwt_secret",
+    "JWT_ALGORITHM": "HS256",
+    "ACCESS_TOKEN_EXPIRE_MINUTES": "30",
+    "TELEGRAM_BOT_TOKEN": "@telegram_bot_token",
+    "ENVIRONMENT": "production"
+  },
+  "builds": [
+    {
+      "src": "run.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15000000",
+        "runtime": "python3.11"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "run.py"
+    }
+  ]
+}
