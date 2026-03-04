@@ -71,6 +71,177 @@ npm run dev
 4. Real-time updates appear in the dashboard
 5. Repair coordinators receive Telegram alerts for high-priority damage
 
+---
+
+## 🤖 YOLOv8 Model Integration (`yolov8x.pt`)
+
+The project ships with an OpenCV-based fallback detector. To unlock full deep-learning accuracy, integrate the **YOLOv8x** pre-trained model (`yolov8x.pt`) by following the steps below.
+
+---
+
+### Step 1 — Download `yolov8x.pt`
+
+Choose **one** of the methods below:
+
+#### ✅ Method A — Auto-download via Python (Easiest)
+When you first run `YOLO("yolov8x.pt")`, Ultralytics automatically downloads the model from the internet and saves it locally:
+```python
+from ultralytics import YOLO
+model = YOLO("yolov8x.pt")   # Downloads ~130 MB on first run
+```
+
+#### ✅ Method B — Download via pip / CLI
+```bash
+# Install ultralytics first (if not already)
+pip install ultralytics
+
+# Then use the yolo CLI to pull the model weights
+yolo export model=yolov8x.pt format=pt   # Downloads yolov8x.pt to current directory
+```
+
+#### ✅ Method C — Direct browser download
+1. Go to the official Ultralytics GitHub releases page:
+   **[https://github.com/ultralytics/assets/releases](https://github.com/ultralytics/assets/releases)**
+2. Find and download **`yolov8x.pt`** (≈ 130 MB)
+3. Save the file to your project root folder
+
+---
+
+### Step 2 — Place the Model File in the Project Root
+
+After downloading, move/copy `yolov8x.pt` to the **project root** directory:
+
+```
+AI-Based-Road-Damage-Pothole-Detection-System-main/
+├── yolov8x.pt          ← place it here
+├── backend/
+└── frontend1/
+```
+
+**On Windows (PowerShell):**
+```powershell
+# If downloaded to Downloads folder:
+Copy-Item "$env:USERPROFILE\Downloads\yolov8x.pt" -Destination "C:\Users\Admin\React\AI-Based-Road-Damage-Pothole-Detection-System-main\"
+```
+
+---
+
+### Step 3 — Install the `ultralytics` Dependency
+
+Make sure the Ultralytics package is installed in your Python environment:
+
+```bash
+cd backend
+pip install ultralytics
+# or install all dependencies at once:
+pip install -r requirements.txt
+```
+
+Verify it works:
+```bash
+python -c "from ultralytics import YOLO; print('ultralytics OK')"
+```
+
+---
+
+### Step 4 — Configure `.env` to Point to the Model
+
+Open `backend/.env` and add / update these keys:
+
+```env
+# Path to yolov8x.pt relative to the backend folder
+# Use ../ to go up one level to the project root
+YOLO_MODEL_PATH=../yolov8x.pt
+
+# Minimum AI confidence to flag a detection (0.0 to 1.0)
+CONFIDENCE_THRESHOLD=0.50
+```
+
+---
+
+### Step 5 — Enable YOLOv8 in the AI Verification Service
+
+Open `backend/app/services/ai_verification_service.py` and replace the `__init__` and `verify_pothole` methods with the YOLOv8-powered version:
+
+```python
+import os
+from ultralytics import YOLO
+
+class AIVerificationService:
+    def __init__(self):
+        self.min_confidence = float(os.getenv("CONFIDENCE_THRESHOLD", 0.50)) * 100
+        self.auto_verify_threshold = 75.0
+
+        model_path = os.getenv("YOLO_MODEL_PATH", "../yolov8x.pt")
+        if os.path.exists(model_path):
+            self.yolo = YOLO(model_path)
+            print(f"✅ YOLOv8 model loaded from: {model_path}")
+        else:
+            # Auto-download from Ultralytics if not found locally
+            print("⚠️  yolov8x.pt not found locally — downloading automatically...")
+            self.yolo = YOLO("yolov8x.pt")  # Triggers auto-download
+
+    async def verify_pothole(self, image_path: str, report_id) -> VerificationInDB:
+        if self.yolo:
+            results = self.yolo(image_path, conf=self.min_confidence / 100)[0]
+            scores = [float(b.conf[0]) * 100 for b in results.boxes] if results.boxes else []
+            confidence_score = max(scores, default=0.0)
+            is_pothole = confidence_score >= self.min_confidence
+        else:
+            confidence_score, is_pothole = await self._analyze_image(image_path)
+            confidence_score = min(confidence_score * 1.15, 100.0)
+
+        return VerificationInDB(
+            report_id=report_id,
+            is_pothole=is_pothole,
+            confidence_score=round(confidence_score, 2),
+            verified_at=datetime.utcnow()
+        )
+```
+
+---
+
+### Step 6 — Test the Integration
+
+1. **Start the backend:**
+   ```bash
+   cd backend
+   python run.py
+   ```
+   You should see in the logs:
+   ```
+   ✅ YOLOv8 model loaded from: ../yolov8x.pt
+   INFO:     Uvicorn running on http://0.0.0.0:8000
+   ```
+
+2. **Submit a test image** via the citizen portal at `http://localhost:3000`
+   → Upload a road/pothole photo → Check the authority dashboard for AI confidence score.
+
+3. **Quick standalone Python test:**
+   ```python
+   from ultralytics import YOLO
+   model = YOLO("yolov8x.pt")
+   results = model("path/to/road_image.jpg")
+   results[0].show()        # Opens window with bounding boxes
+   results[0].save()        # Saves annotated image to runs/detect/
+   print(results[0].boxes)  # Prints detection details
+   ```
+
+---
+
+### YOLOv8 Model Variants Comparison
+
+| Model | File Size | Speed | Accuracy | Best For |
+|-------|-----------|-------|----------|----------|
+| `yolov8n.pt` | 6 MB | ⚡ Fastest | Lowest | Low-end / Edge devices |
+| `yolov8s.pt` | 22 MB | Fast | Moderate | Development / Testing |
+| `yolov8m.pt` | 50 MB | Balanced | Good | Production (CPU) |
+| **`yolov8x.pt`** | **130 MB** | Moderate | **Highest ✅** | **Best accuracy — Recommended** |
+
+> 💡 `yolov8x.pt` uses ~1–2 GB RAM during inference. A CUDA-enabled NVIDIA GPU will give **3–5× faster** processing. CPU-only mode still works but is slower.
+
+---
+
 ## 📄 License
 
 MIT License
