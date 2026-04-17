@@ -18,7 +18,7 @@ async def register_user(
 ):
     """
     Register a new user
-    
+
     - **name**: User's full name
     - **email**: Valid email address
     - **phone**: Phone number
@@ -32,20 +32,20 @@ async def register_user(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email already registered"
         )
-    
+
     # Hash password
     hashed_password = get_password_hash(user_data.password)
-    
+
     # Create user document
     user = UserInDB(
         **user_data.dict(exclude={"password"}),
         hashed_password=hashed_password
     )
-    
+
     # Insert into database
     result = await db.users.insert_one(user.dict(by_alias=True, exclude={"id"}))
     user.id = result.inserted_id
-    
+
     # Return user response
     return UserResponse(
         _id=str(user.id),
@@ -60,16 +60,16 @@ async def login(
 ):
     """
     Login with email and password
-    
+
     Returns JWT access and refresh tokens with user data
     """
     # Find user by email
     user = await db.users.find_one({"email": credentials.email})
-    
+
     # Check for testing credentials if user not found in DB
     is_test_user = False
     test_user_data = None
-    
+
     from app.config import settings
     if not user and credentials.email == settings.TEST_AUTHORITY_EMAIL:
         if credentials.password == settings.TEST_AUTHORITY_PASSWORD:
@@ -89,24 +89,24 @@ async def login(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password"
         )
-    
+
     # Verify password if not a test user
     if not is_test_user and not verify_password(credentials.password, user["hashed_password"]):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password"
         )
-    
+
     # Create tokens
     token_data = {
         "sub": str(user["_id"]),
         "email": user["email"],
         "role": user["role"]
     }
-    
+
     access_token = create_access_token(token_data)
     refresh_token = create_refresh_token(token_data)
-    
+
     return TokenWithUser(
         access_token=access_token,
         refresh_token=refresh_token,
@@ -125,7 +125,7 @@ async def get_current_user_info(
 ):
     """Get current authenticated user information"""
     from app.utils.auth import get_current_user
-    
+
     # This endpoint would need the current user dependency
     # For now, returning a stub
     raise HTTPException(

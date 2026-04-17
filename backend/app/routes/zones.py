@@ -22,7 +22,7 @@ async def get_risk_zones(
 ):
     """
     Get all risk zones
-    
+
     - **risk_level**: Filter by risk level (low, medium, high)
     """
     # Build query
@@ -34,11 +34,11 @@ async def get_risk_zones(
                 detail="Invalid risk level"
             )
         query["risk_level"] = risk_level
-    
+
     # Fetch zones
     cursor = db.risk_zones.find(query).sort("pothole_count", -1)
     zones = await cursor.to_list(length=None)
-    
+
     # Convert to response models
     return [
         RiskZoneResponse(
@@ -46,6 +46,7 @@ async def get_risk_zones(
             center_location=zone["center_location"],
             pothole_count=zone["pothole_count"],
             risk_level=zone["risk_level"],
+            h3_index=zone["h3_index"],
             report_ids=[str(rid) for rid in zone["report_ids"]],
             created_at=zone["created_at"],
             updated_at=zone["updated_at"]
@@ -61,13 +62,14 @@ async def get_high_risk_zones(
 ):
     """Get only high-risk zones"""
     zones = await db.risk_zones.find({"risk_level": "high"}).sort("pothole_count", -1).to_list(length=None)
-    
+
     return [
         RiskZoneResponse(
             _id=str(zone["_id"]),
             center_location=zone["center_location"],
             pothole_count=zone["pothole_count"],
             risk_level=zone["risk_level"],
+            h3_index=zone["h3_index"],
             report_ids=[str(rid) for rid in zone["report_ids"]],
             created_at=zone["created_at"],
             updated_at=zone["updated_at"]
@@ -83,12 +85,12 @@ async def recalculate_zones(
 ):
     """
     Recalculate all risk zones based on current verified reports (Authority only)
-    
+
     This endpoint triggers the clustering algorithm to group nearby potholes
     and determine risk levels.
     """
     created_zones = await clustering_service.recalculate_risk_zones(db)
-    
+
     return {
         "message": "Risk zones recalculated successfully",
         "zones_created": len(created_zones)

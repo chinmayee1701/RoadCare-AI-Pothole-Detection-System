@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -8,7 +7,6 @@ import LoadingSpinner from '../components/LoadingSpinner'
 import ApiService from '../services/apiService'
 
 const ReportPotholePage = () => {
-  const navigate = useNavigate()
   const { user } = useAuth()
   const [formData, setFormData] = useState({
     image: null,
@@ -94,7 +92,6 @@ const ReportPotholePage = () => {
       
       // Show AI verification results
       const aiConfidence = response.data.ai_confidence || 0
-      const aiVerified = response.data.ai_verified
       const status = response.data.status
       
       let message = 'Report submitted successfully!'
@@ -220,7 +217,7 @@ const ReportPotholePage = () => {
                       </div>
                     </div>
                     <p className="text-xs text-[#617589] dark:text-gray-500 italic px-1">
-                      Location is automatically detected from your browser's geolocation API.
+                      Location is automatically detected from your browser&apos;s geolocation API.
                     </p>
                   </div>
 

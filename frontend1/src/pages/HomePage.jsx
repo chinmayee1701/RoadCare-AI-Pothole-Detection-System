@@ -136,7 +136,7 @@ const HomePage = () => {
                   <div className="flex flex-col gap-2">
                     <h3 className="text-[#111418] dark:text-white text-xl font-bold leading-tight">3. Authority Action</h3>
                     <p className="text-[#617589] dark:text-gray-400 text-base font-normal leading-relaxed">
-                      Validated reports are dispatched to local repair crews. You'll receive a notification once the maintenance is completed.
+                      Validated reports are dispatched to local repair crews. You&apos;ll receive a notification once the maintenance is completed.
                     </p>
                   </div>
                 </div>

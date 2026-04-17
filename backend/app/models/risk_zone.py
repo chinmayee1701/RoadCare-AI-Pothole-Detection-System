@@ -20,9 +20,10 @@ class RiskZoneInDB(RiskZoneBase):
     """Risk zone model as stored in database"""
     id: Optional[PyObjectId] = Field(default=None, alias="_id")
     report_ids: List[PyObjectId] = Field(default_factory=list)
+    h3_index: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
-    
+
     class Config:
         populate_by_name = True
         arbitrary_types_allowed = True
@@ -33,9 +34,10 @@ class RiskZoneResponse(RiskZoneBase):
     """Risk zone response model"""
     id: str = Field(..., alias="_id")
     report_ids: List[str]
+    h3_index: str
     created_at: datetime
     updated_at: datetime
-    
+
     class Config:
         populate_by_name = True
         json_encoders = {ObjectId: str, datetime: lambda v: v.isoformat()}

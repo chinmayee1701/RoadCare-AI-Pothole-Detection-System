@@ -9,7 +9,7 @@ from bson import ObjectId
 
 class PyObjectId(ObjectId):
     """Custom ObjectId type for Pydantic"""
-    
+
     @classmethod
     def __get_pydantic_core_schema__(cls, source_type, handler):
         from pydantic_core import core_schema
@@ -19,7 +19,7 @@ class PyObjectId(ObjectId):
                 lambda x: str(x)
             )
         )
-    
+
     @classmethod
     def validate(cls, v):
         if isinstance(v, ObjectId):
@@ -55,7 +55,7 @@ class UserInDB(UserBase):
     id: Optional[PyObjectId] = Field(default=None, alias="_id")
     hashed_password: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
-    
+
     class Config:
         populate_by_name = True
         arbitrary_types_allowed = True
@@ -66,7 +66,7 @@ class UserResponse(UserBase):
     """User response model (without sensitive data)"""
     id: str = Field(..., alias="_id")
     created_at: datetime
-    
+
     class Config:
         populate_by_name = True
         json_encoders = {ObjectId: str}

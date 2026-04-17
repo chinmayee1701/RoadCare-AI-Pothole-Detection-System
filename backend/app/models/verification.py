@@ -19,7 +19,7 @@ class VerificationInDB(VerificationBase):
     id: Optional[PyObjectId] = Field(default=None, alias="_id")
     report_id: PyObjectId
     verified_at: datetime = Field(default_factory=datetime.utcnow)
-    
+
     class Config:
         populate_by_name = True
         arbitrary_types_allowed = True
@@ -31,7 +31,7 @@ class VerificationResponse(VerificationBase):
     id: str = Field(..., alias="_id")
     report_id: str
     verified_at: datetime
-    
+
     class Config:
         populate_by_name = True
         json_encoders = {ObjectId: str, datetime: lambda v: v.isoformat()}

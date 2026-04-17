@@ -30,9 +30,10 @@ class ReportInDB(ReportBase):
     id: Optional[PyObjectId] = Field(default=None, alias="_id")
     user_id: PyObjectId
     image_path: str
+    h3_index: Optional[str] = Field(default=None, index=True)
     status: str = Field(default="pending", pattern="^(pending|verified|rejected)$")
     report_date: datetime = Field(default_factory=datetime.utcnow)
-    
+
     class Config:
         populate_by_name = True
         arbitrary_types_allowed = True
@@ -45,11 +46,12 @@ class ReportResponse(ReportBase):
     id: str = Field(..., alias="_id")
     user_id: str
     image_path: str
+    h3_index: Optional[str] = None
     status: str
     report_date: datetime
     ai_confidence: Optional[float] = Field(None, description="AI verification confidence score (0-100)")
     ai_verified: Optional[bool] = Field(None, description="Whether AI detected a pothole")
-    
+
     class Config:
         populate_by_name = True
         json_encoders = {ObjectId: str, datetime: lambda v: v.isoformat()}

@@ -1,81 +1,127 @@
 # RoadCare - AI-Based Road Damage & Pothole Detection System
 
-RoadCare is an advanced autonomous road infrastructure monitoring system leveraging Deep Learning (YOLOv8, Image Classification) to detect road damage, potholes, and other pavement defects in real-time. It provides instant citizen reporting via mobile apps, AI verification by authorities, and automated repair coordination through Telegram notifications and a centralized dashboard.
+RoadCare is a full-stack pothole reporting and road-risk management system. Citizens submit road images and GPS coordinates through a React frontend, the FastAPI backend verifies the submission, MongoDB stores reports and audit data, and an H3-based geospatial layer groups verified potholes into risk zones for authority review.
 
-## 🚀 Features
+## Core Capabilities
 
-- **Real-Time Damage Detection**: Detects potholes, cracks, and road damage using custom-trained YOLOv8 models
-- **Citizen Reporting**: Mobile-friendly interface for citizens to report damage with photos and GPS location
-- **AI Verification**: Automatic damage classification and severity assessment using deep learning models
-- **Authority Dashboard**: Secure management portal for reviewing, verifying, and tracking repair status
-- **Smart Notifications**: Real-time alerts via Telegram and dashboard updates for report changes
-- **Location-Based Analytics**: Geospatial visualization of damage hotspots and repair progress
-- **Secure & Scalable**: Built with FastAPI, React, and MongoDB for production-grade reliability
+- Citizen login, signup, and authenticated pothole reporting
+- Browser-based image upload with automatic geolocation capture
+- AI-assisted verification using OpenCV-based image analysis
+- Authority dashboard for triage, review, and repair workflow tracking
+- H3 hexagonal clustering for risk-zone creation
+- Role-based access control for citizen and authority users
+- MongoDB-backed persistence with indexes for reports, zones, and repairs
 
-## 🛠️ Tech Stack
+## Architecture
 
-- **Frontend**: React 18, TypeScript, Vite, TailwindCSS, Axios
-- **Backend**: Python, FastAPI, Uvicorn, SQLAlchemy
-- **Deep Learning**: YOLOv8 (Ultralytics), TensorFlow, PyTorch, OpenCV
-- **Database**: SQLite (Development) / PostgreSQL (Production)
-- **Notifications**: Telegram Bot API
-- **APIs**: RESTful architecture with automatic Swagger documentation
+User -> React UI -> FastAPI API -> Image Verification -> MongoDB -> H3 Clustering -> Authority Dashboard
 
-## 📦 Installation
+### Why this architecture
 
-### Clone the repository:
+- The frontend handles presentation and user interaction.
+- The API owns authentication, file upload, validation, and business rules.
+- MongoDB stores flexible document-shaped data such as reports, verification results, and risk zones.
+- H3 gives stable spatial bucketing without square-grid bias.
+- The current verification engine is lightweight and explainable, which makes it practical for a project-scale system and easier to defend academically.
 
-```bash
-git clone https://github.com/CodeArunJ/AI-Based-Road-Damage-Pothole-Detection-System.git
-cd AI-Based-Road-Damage-Pothole-Detection-System
-```
+## Technology Stack
 
-### Environment Setup
+- Frontend: React, Vite, Axios, React Router
+- Backend: Python, FastAPI, Uvicorn, Motor
+- Computer Vision: OpenCV, NumPy, Pillow
+- Database: MongoDB
+- Geospatial: Uber H3
+- Testing: pytest, API and integration test suites, frontend E2E tests
 
-Create a `.env` file in the root directory with required configuration.
+## Project Structure
 
-**Required keys:**
-- `DATABASE_URL`
-- `SECRET_KEY`
-- `JWT_SECRET`
-- `TELEGRAM_BOT_TOKEN` (optional, for notifications)
+- `backend/app/main.py` - FastAPI application entry point
+- `backend/app/routes/` - auth, report, zone, and repair endpoints
+- `backend/app/services/` - image verification and clustering logic
+- `backend/app/config/database.py` - MongoDB connection and index creation
+- `frontend1/src/` - React application, pages, components, and API client
 
-### Run Verification & Setup
+## Local Setup
 
-Execute the setup script to validate your environment and install dependencies:
+### Prerequisites
 
-```bash
-python setup_project.py
-```
+- Python 3.10+
+- Node.js 18+
+- MongoDB running locally or reachable through a connection string
 
-### Start the Application
+### Backend
 
-**Backend:**
 ```bash
 cd backend
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
 python run.py
 ```
 
-**Frontend:**
+### Frontend
+
 ```bash
 cd frontend1
 npm install
 npm run dev
 ```
 
-## 🛡️ Usage
+## Environment Variables
 
-1. Access the citizen portal at `http://localhost:3000`
-2. Citizens can report potholes with photos and location data
-3. Authorities access `http://localhost:3000/authority-login` to verify and manage reports
-4. Real-time updates appear in the dashboard
-5. Repair coordinators receive Telegram alerts for high-priority damage
+The backend expects a `.env` file with at least:
 
----
+- `JWT_SECRET_KEY`
+- `MONGODB_URI`
+- `MONGODB_DB_NAME`
 
-## 🤖 YOLOv8 Model Integration (`yolov8x.pt`)
+Optional values exist for test credentials and upload configuration.
 
-The project ships with an OpenCV-based fallback detector. To unlock full deep-learning accuracy, integrate the **YOLOv8x** pre-trained model (`yolov8x.pt`) by following the steps below.
+## Main Workflows
+
+### Citizen flow
+
+1. Register or log in.
+2. Upload a pothole image.
+3. Allow browser geolocation, or use the fallback coordinates.
+4. Submit the report.
+5. Review the AI verification status on the returned result.
+
+### Authority flow
+
+1. Log in with authority credentials.
+2. Review submitted reports.
+3. Inspect confidence scores, locations, and report status.
+4. View clustered risk zones.
+5. Create or update repair actions.
+
+## Technical Notes
+
+- Reports are stored with their H3 cell index so spatial grouping is repeatable.
+- Verification history is stored separately from the report record to preserve auditability.
+- Passwords are hashed before storage and protected endpoints require JWT bearer authentication.
+- The current verification path is heuristic rather than a large trained deep model, so it is easier to explain and operate but less robust than a fully trained detector under extreme conditions.
+
+## Testing
+
+The repository includes backend unit, integration, geospatial, and database tests, plus frontend end-to-end coverage. The most recent validation pass showed the critical auth, reporting, and dashboard flows working after stale test expectations were corrected.
+
+## Limitations
+
+- Low light, blur, shadows, and road patches can reduce verification accuracy.
+- Risk-zone recalculation currently rebuilds clustered zones from verified reports, so concurrent reads may briefly observe a replacement window.
+- The system is best suited to pilot or municipal-scale deployments, not yet a national-scale real-time roadway intelligence platform.
+
+## Future Improvements
+
+- Replace the heuristic verifier with a trained CNN or transfer-learned detector
+- Add real-time camera or mobile capture workflows
+- Introduce transactional or versioned risk-zone rebuilds
+- Add stronger object storage and queue-based inference for higher scale
+
+## License
+
+See [LICENSE](LICENSE) for terms.
 
 ---
 
@@ -98,14 +144,6 @@ pip install ultralytics
 # Then use the yolo CLI to pull the model weights
 yolo export model=yolov8x.pt format=pt   # Downloads yolov8x.pt to current directory
 ```
-
-#### ✅ Method C — Direct browser download
-1. Go to the official Ultralytics GitHub releases page:
-   **[https://github.com/ultralytics/assets/releases](https://github.com/ultralytics/assets/releases)**
-2. Find and download **`yolov8x.pt`** (≈ 130 MB)
-3. Save the file to your project root folder
-
----
 
 ### Step 2 — Place the Model File in the Project Root
 
@@ -335,7 +373,6 @@ AI-Based-Road-Damage-Pothole-Detection-System/
 ├── requirements.txt               # Root dependencies (if any)
 ├── .env                           # Environment configuration (not in git)
 ├── .gitignore
-├── vercel.json                    # Frontend deployment config
 ├── pytest.ini                     # Testing configuration
 ├── MIGRATION.md                   # Frontend migration notes
 └── README.md                      # This file

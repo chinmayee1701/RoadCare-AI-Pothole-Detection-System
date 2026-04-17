@@ -5,3 +5,6 @@ pytest-html==4.1.1
 playwright==1.42.0
 selenium==4.17.2
 locust==2.24.1
+pylint==3.1.0
+coverage==7.4.4
+bandit==1.7.8

@@ -145,13 +145,19 @@ const ComplaintDetailPage = () => {
             {/* Location */}
             <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800">
               <h3 className="font-bold mb-4">Location</h3>
-              <div className="space-y-2">
+              <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary">location_on</span>
                   <span className="font-mono">
-                    {report.latitude?.toFixed(6)}°, {report.longitude?.toFixed(6)}°
+                    {report.location?.latitude?.toFixed(6)}°, {report.location?.longitude?.toFixed(6)}°
                   </span>
                 </div>
+                {report.h3_index && (
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <span className="material-symbols-outlined text-xs">grid_view</span>
+                    <span>H3 Index: <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">{report.h3_index}</code></span>
+                  </div>
+                )}
                 {report.description && (
                   <p className="text-gray-600 dark:text-gray-400 text-sm">
                     {report.description}

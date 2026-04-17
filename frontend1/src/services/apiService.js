@@ -83,7 +83,7 @@ const ApiService = {
   zones: {
     getAll: (params) => apiClient.get('/zones', { params }),
     getById: (id) => apiClient.get(`/zones/${id}`),
-    getRiskZones: () => apiClient.get('/zones/risk-zones'),
+    getRiskZones: () => apiClient.get('/zones'),
   },
 }
 

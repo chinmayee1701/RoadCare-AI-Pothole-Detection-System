@@ -1,25 +1,25 @@
 """
 Authentication and authorization utilities
 """
+import hashlib
+import hmac
 from datetime import datetime, timedelta
 from typing import Optional
-import hmac
-from jose import JWTError, jwt
-from passlib.context import CryptContext
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+
 from app.config import settings
 from app.models.user import TokenData
 
 # Password hashing context
 try:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-except Exception:
+except Exception: # pylint: disable=broad-except
     # Fallback if bcrypt is broken on the system
     pwd_context = None
-
-import hashlib
-import secrets
 
 # HTTP Bearer token security
 security = HTTPBearer()
@@ -30,8 +30,9 @@ def get_password_hash(password: str) -> str:
         if pwd_context and "bcrypt" in pwd_context.schemes():
             return pwd_context.hash(password)
     except Exception as e:
-        print(f"⚠️ Bcrypt failed, falling back to SHA-256: {e}")
-    
+        # Keep fallback logging ASCII-only to avoid Windows console encoding issues.
+        print(f"Warning: bcrypt failed, falling back to SHA-256: {e}")
+
     # Fallback: SHA-256 with a simple salt
     # Note: In production, use a proper salt from DB, but for this demo/test:
     salt = "roadcare_legacy_salt_"
@@ -45,7 +46,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
             return pwd_context.verify(plain_password, hashed_password)
     except Exception:
         pass
-        
+
     # Check fallback/legacy hash
     salt = "roadcare_legacy_salt_"
     expected = hashlib.sha256((salt + plain_password).encode()).hexdigest()
@@ -55,12 +56,12 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     """Create JWT access token"""
     to_encode = data.copy()
-    
+
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
         expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    
+
     to_encode.update({"exp": expire, "type": "access"})
     encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
     return encoded_jwt
@@ -82,15 +83,15 @@ def decode_token(token: str) -> TokenData:
         user_id: str = payload.get("sub")
         email: str = payload.get("email")
         role: str = payload.get("role")
-        
+
         if user_id is None or email is None or role is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid token payload"
             )
-        
+
         return TokenData(user_id=user_id, email=email, role=role)
-    
+
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

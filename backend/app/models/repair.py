@@ -25,7 +25,7 @@ class RepairActionInDB(RepairActionBase):
     zone_id: PyObjectId
     start_date: datetime = Field(default_factory=datetime.utcnow)
     end_date: Optional[datetime] = None
-    
+
     class Config:
         populate_by_name = True
         arbitrary_types_allowed = True
@@ -38,7 +38,7 @@ class RepairActionResponse(RepairActionBase):
     zone_id: str
     start_date: datetime
     end_date: Optional[datetime]
-    
+
     class Config:
         populate_by_name = True
         json_encoders = {ObjectId: str, datetime: lambda v: v.isoformat()}

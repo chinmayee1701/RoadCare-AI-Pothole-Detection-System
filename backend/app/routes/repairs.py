@@ -22,7 +22,7 @@ async def create_repair_action(
 ):
     """
     Create a new repair action for a risk zone (Authority only)
-    
+
     - **zone_id**: ID of the risk zone
     - **assigned_department**: Department responsible for repair
     - **repair_status**: Initial status (default: pending)
@@ -33,25 +33,25 @@ async def create_repair_action(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid zone ID"
         )
-    
+
     zone = await db.risk_zones.find_one({"_id": ObjectId(repair_data.zone_id)})
     if not zone:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Risk zone not found"
         )
-    
+
     # Create repair action
     repair = RepairActionInDB(
         zone_id=ObjectId(repair_data.zone_id),
         assigned_department=repair_data.assigned_department,
         repair_status=repair_data.repair_status
     )
-    
+
     # Insert into database
     result = await db.repair_actions.insert_one(repair.dict(by_alias=True, exclude={"id"}))
     repair.id = result.inserted_id
-    
+
     return RepairActionResponse(
         _id=str(repair.id),
         zone_id=str(repair.zone_id),
@@ -67,7 +67,7 @@ async def get_repair_actions(
 ):
     """
     Get all repair actions (Authority only)
-    
+
     - **status**: Filter by repair status (pending, in_progress, completed)
     """
     # Build query
@@ -79,11 +79,11 @@ async def get_repair_actions(
                 detail="Invalid status filter"
             )
         query["repair_status"] = status_filter
-    
+
     # Fetch repairs
     cursor = db.repair_actions.find(query).sort("start_date", -1)
     repairs = await cursor.to_list(length=None)
-    
+
     # Convert to response models
     return [
         RepairActionResponse(
@@ -110,15 +110,15 @@ async def get_repair_action(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid repair ID"
         )
-    
+
     repair = await db.repair_actions.find_one({"_id": ObjectId(repair_id)})
-    
+
     if not repair:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Repair action not found"
         )
-    
+
     return RepairActionResponse(
         _id=str(repair["_id"]),
         zone_id=str(repair["zone_id"]),
@@ -135,7 +135,7 @@ async def update_repair_action(
 ):
     """
     Update repair action status (Authority only)
-    
+
     - **repair_status**: New status (pending, in_progress, completed)
     - **assigned_department**: Update responsible department (optional)
     """
@@ -144,30 +144,30 @@ async def update_repair_action(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid repair ID"
         )
-    
+
     # Build update document
     update_doc = {"repair_status": update_data.repair_status}
-    
+
     if update_data.assigned_department:
         update_doc["assigned_department"] = update_data.assigned_department
-    
+
     # Set end_date if status is completed
     if update_data.repair_status == "completed":
         update_doc["end_date"] = datetime.utcnow()
-    
+
     # Update repair
     result = await db.repair_actions.find_one_and_update(
         {"_id": ObjectId(repair_id)},
         {"$set": update_doc},
         return_document=True
     )
-    
+
     if not result:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Repair action not found"
         )
-    
+
     return RepairActionResponse(
         _id=str(result["_id"]),
         zone_id=str(result["zone_id"]),
