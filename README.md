@@ -1,4 +1,4 @@
-# 🚗 RoadCare - AI-Based Road Damage & Pothole Detection System
+# RoadCare - AI-Based Road Damage & Pothole Detection System
 
 <div align="center">
   
