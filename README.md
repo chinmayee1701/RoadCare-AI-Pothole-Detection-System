@@ -125,9 +125,9 @@ Update Repair Status
    ↓
 Citizen Tracks Report
 ```
+## 📂 Project Structure
 
-📂 Project Structure
-
+```text
 RoadCare-AI-Pothole-Detection-System/
 │
 ├── backend/
@@ -142,19 +142,25 @@ RoadCare-AI-Pothole-Detection-System/
 │
 ├── frontend1/
 │   ├── src/
-│   │   ├── pages/
 │   │   ├── components/
+│   │   ├── pages/
 │   │   └── ...
 │   ├── package.json
 │   └── ...
 │
 ├── yolo_dataset/
 │   ├── images/
+│   │   ├── train/
+│   │   └── val/
 │   └── data.yaml
 │
 ├── test_images/
 │
-└── README.md
+├── README.md
+└── LICENSE
+```
+
+
 
 ## 🚀 Installation & Setup
 
