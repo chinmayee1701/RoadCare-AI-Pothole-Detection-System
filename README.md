@@ -63,13 +63,10 @@ Manual road inspection is:
 - 8GB RAM (16GB recommended)
 - GPU optional (NVIDIA CUDA 11.8+ for faster inference)
 
-### Installation
+### 1. Installation
+git clone https://github.com/chinmayee1701/RoadCare-AI-Pothole-Detection-System.git
+cd RoadCare-AI-Pothole-Detection-System
 
-#### 1. Clone Repository
-```bash
-git clone https://github.com/jelsingearun/RoadCare---AI-Based-Road-Damage-Pothole-Detection-System.git
-cd RoadCare---AI-Based-Road-Damage-Pothole-Detection-System
-```
 
 #### 2. Backend Setup
 ```bash
@@ -464,10 +461,5 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 <div align="center">
   
   ### ⭐ If this project helped you, please star it!
-  
-  **Made with ❤️ for smarter infrastructure management**
-  
-  ![GitHub Stars](https://img.shields.io/github/stars/jelsingearun/RoadCare---AI-Based-Road-Damage-Pothole-Detection-System?style=social)
-  ![GitHub Forks](https://img.shields.io/github/forks/jelsingearun/RoadCare---AI-Based-Road-Damage-Pothole-Detection-System?style=social)
   
 </div>
