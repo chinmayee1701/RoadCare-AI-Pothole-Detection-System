@@ -94,7 +94,7 @@ const ComplaintDetailPage = () => {
             <div>
               <h1 className="text-3xl font-bold mb-2">Report #{(report._id || report.id)?.substring(0, 8)}</h1>
               <p className="text-gray-600 dark:text-gray-400">
-                Submitted on {new Date(report.created_at).toLocaleString()}
+                Submitted on {new Date(report.report_date).toLocaleString()}
               </p>
             </div>
             <span className={`px-4 py-2 rounded-full font-semibold ${getStatusColor(report.status)}`}>
@@ -127,17 +127,17 @@ const ComplaintDetailPage = () => {
           {/* Image */}
           <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800">
             <h3 className="font-bold mb-4">Evidence Photo</h3>
-            {report.image_url ? (
-              <img
-                src={report.image_url}
-                alt="Pothole evidence"
-                className="w-full rounded-lg"
-              />
-            ) : (
-              <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded-lg flex items-center justify-center">
-                <span className="text-gray-400">No image available</span>
-              </div>
-            )}
+            {report.image_path ? (
+  <img
+    src={`http://localhost:8000/${report.image_path.replace(/\\/g, "/")}`}
+    alt="Pothole evidence"
+    className="w-full rounded-lg"
+  />
+) : (
+  <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+    <span className="text-gray-400">No image available</span>
+  </div>
+)}
           </div>
 
           {/* Details */}

@@ -60,5 +60,5 @@ class ReportResponse(ReportBase):
 
 class ReportStatusUpdate(BaseModel):
     """Model for updating report status"""
-    status: str = Field(..., pattern="^(pending|verified|rejected)$")
+    status: str = Field(..., pattern="^(pending|verified|rejected|repaired)$")
     notes: Optional[str] = Field(None, max_length=500)

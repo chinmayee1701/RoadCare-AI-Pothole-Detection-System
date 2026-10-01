@@ -176,15 +176,11 @@ async def get_report(
 ):
     """Get specific report by ID"""
     # Validate ObjectId
-    if not ObjectId.is_valid(report_id):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid report ID"
-        )
+    
 
     # Fetch report with verification data using aggregation
     pipeline = [
-        {"$match": {"_id": ObjectId(report_id)}},
+        {"$match": {"_id": report_id}},
         {"$lookup": {
             "from": "image_verification",
             "localField": "_id",
@@ -254,7 +250,7 @@ async def update_report_status(
 
     # Update status
     result = await db.pothole_reports.find_one_and_update(
-        {"_id": ObjectId(report_id)},
+        {"_id": report_id},
         {"$set": {"status": status_update.status}},
         return_document=True
     )
