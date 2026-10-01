@@ -1,465 +1,269 @@
-# RoadCare-AI-Pothole Detection System
+# RoadCare – AI-Based Road Damage & Pothole Detection System
 
-<div align="center">
-  
-  **Intelligent Computer Vision System for Infrastructure Maintenance**
-  
-  ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-  ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-  ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-  ![YOLOv8](https://img.shields.io/badge/YOLOv8-00A4EF?style=for-the-badge&logo=ultralytics&logoColor=white)
-  
-</div>
+## 📌 Overview
 
----
+RoadCare is an AI-powered web application designed to help citizens report potholes and road damage and help authorities manage, verify, and track reported road issues.
 
-## 📖 Overview
-
-**RoadCare** is a production-grade, full-stack system for automated road damage detection and infrastructure management. Using advanced AI-powered computer vision, municipalities and infrastructure teams can efficiently detect, verify, and prioritize road repairs—transforming reactive maintenance into proactive, data-driven infrastructure management.
-
-### 🎯 Key Features
-- 🤖 **AI-Powered Detection** - YOLOv8-based deep learning for accurate damage identification
-- 📱 **Citizen Reporting** - Mobile-friendly interface for public damage submissions
-- ✅ **Auto-Verification** - Confidence-based verification system with human review
-- 🗺️ **Geolocation Mapping** - GPS-based damage tracking and clustering
-- 📊 **Risk Analytics** - Identify high-risk zones requiring immediate attention
-- 🚀 **Real-time Dashboard** - Authority monitoring and repair coordination
-- 🔒 **Role-Based Access** - Secure authentication for citizens and authorities
-
----
+The system combines image-based AI verification with location information to provide a structured platform for reporting and managing road damage.
 
 ## 🎯 Problem Statement
 
-Manual road inspection is:
-- ⏱️ **Time-consuming** - Labor-intensive field surveys
-- 💰 **Expensive** - High operational costs
-- 📉 **Inconsistent** - Human error and bias in assessments
-- ❌ **Reactive** - Addresses issues after complaints, not proactively
+Potholes and damaged roads can create serious safety risks for commuters. Traditional reporting methods can be slow and may not provide enough information for authorities to verify and prioritize road-damage complaints.
 
-**RoadCare solves this** by automating detection and enabling data-driven maintenance.
+RoadCare provides a centralized platform where citizens can submit pothole reports along with images and location details, while authorities can review and manage these reports.
 
----
+## 💡 Proposed Solution
+
+RoadCare allows users to:
+
+- Upload images of potholes or road damage.
+- Provide the location of the reported issue.
+- Add a description of the road damage.
+- Receive AI-based image verification.
+- Track the status of submitted reports.
+
+Authorities can:
+
+- View submitted reports.
+- Review pothole images and locations.
+- Verify or reject reports.
+- Update the status of reports.
+- Manage the repair workflow.
+
+## ✨ Key Features
+
+### 👤 Citizen Module
+
+- User registration and login
+- Submit pothole reports
+- Upload pothole images
+- Provide GPS location
+- Add report descriptions
+- View submitted reports
+- Track report status
+
+### 🏛️ Authority Module
+
+- Authority authentication
+- View reported potholes
+- Review submitted complaints
+- View uploaded images
+- Verify or reject reports
+- Update report status
+- Manage repair-related status updates
+
+### 🤖 AI Verification
+
+- Image-based pothole verification
+- AI confidence score
+- Automatic verification/rejection based on AI results
+- YOLO-based pothole detection
+
+### 📍 Location-Based Reporting
+
+Each report contains:
+
+- Latitude
+- Longitude
+- Location information
+- H3 location index
+
+This helps organize reported road-damage locations geographically.
 
 ## 🛠️ Technology Stack
 
-| Component | Technology |
-|-----------|------------|
-| **Frontend** | React 18, Vite, Tailwind CSS, React Router |
-| **Backend** | FastAPI, Python 3.9+, Async I/O |
-| **AI/ML** | YOLOv8, OpenCV, TensorFlow, NumPy |
-| **Database** | MongoDB with geospatial indexing |
-| **Geospatial** | Uber H3 hexagonal clustering |
-| **Authentication** | JWT tokens with role-based access |
-| **Deployment** | Docker, Uvicorn, Nginx |
+### Frontend
 
----
+- React
+- JavaScript
+- Vite
+- HTML
+- CSS
 
-## 🚀 Quick Start
+### Backend
 
-### Prerequisites
-- Python 3.9+
-- Node.js 16+
-- MongoDB 4.4+
-- 8GB RAM (16GB recommended)
-- GPU optional (NVIDIA CUDA 11.8+ for faster inference)
+- Python
+- FastAPI
+- REST APIs
 
-### 1. Installation
+### AI / Computer Vision
+
+- YOLO
+- OpenCV
+- Python
+
+### Database
+
+- MongoDB
+
+### Development Tools
+
+- Git
+- GitHub
+- VS Code
+
+## 🔄 System Workflow
+
+```text
+Citizen
+   ↓
+Login / Registration
+   ↓
+Upload Pothole Image
+   ↓
+Provide Location & Description
+   ↓
+AI Verification
+   ↓
+Report Stored in Database
+   ↓
+Authority Reviews Report
+   ↓
+Verify / Reject
+   ↓
+Update Repair Status
+   ↓
+Citizen Tracks Report
+
+📂 Project Structure
+
+RoadCare-AI-Pothole-Detection-System/
+│
+├── backend/
+│   ├── app/
+│   │   ├── config/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   └── utils/
+│   ├── requirements.txt
+│   └── ...
+│
+├── frontend1/
+│   ├── src/
+│   │   ├── pages/
+│   │   ├── components/
+│   │   └── ...
+│   ├── package.json
+│   └── ...
+│
+├── yolo_dataset/
+│   ├── images/
+│   └── data.yaml
+│
+├── test_images/
+│
+└── README.md
+
+## 🚀 Installation & Setup
+
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/chinmayee1701/RoadCare-AI-Pothole-Detection-System.git
 cd RoadCare-AI-Pothole-Detection-System
+```
 
+### 2. Backend Setup
 
-#### 2. Backend Setup
+Open PowerShell or Command Prompt:
+
 ```bash
 cd backend
+```
 
-# Create virtual environment
+Create a virtual environment:
+
+```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
-# Install dependencies
+Activate the virtual environment on Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+Install the required dependencies:
+
+```bash
 pip install -r requirements.txt
+```
 
-# Configure environment
-cp .env.example .env
-# Edit .env with your settings
+Start the FastAPI server:
 
-# Start backend
+```bash
 uvicorn app.main:app --reload
 ```
 
-Backend runs at: `http://localhost:8000`
+### 3. Frontend Setup
 
-#### 3. Frontend Setup
+Open another terminal:
+
 ```bash
 cd frontend1
+```
 
-# Install dependencies
+Install dependencies:
+
+```bash
 npm install
+```
 
-# Configure environment (optional)
-echo "VITE_API_BASE_URL=http://localhost:8000" > .env
+Start the frontend:
 
-# Start development server
+```bash
 npm run dev
 ```
 
-Frontend runs at: `http://localhost:3000`
+## 🤖 AI Model
 
----
+RoadCare uses a YOLO-based object detection approach for pothole detection and image verification.
 
-## 📊 Architecture Overview
+The AI verification workflow analyzes uploaded road images and provides a confidence score that is used as part of the report verification process.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    User Interface Layer                      │
-│  ┌────────────────┐  ┌──────────────────┐  ┌────────────┐  │
-│  │  Citizen App   │  │ Authority Admin  │  │ Dashboard  │  │
-│  │  (React SPA)   │  │   Dashboard      │  │ Analytics  │  │
-│  └────────────────┘  └──────────────────┘  └────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                              ↓ HTTPS/WebSocket
-┌─────────────────────────────────────────────────────────────┐
-│                      API Layer (FastAPI)                     │
-│  ┌──────────────┐  ┌────────────┐  ┌──────────────────┐    │
-│  │ Auth Routes  │  │ Report API │  │  Zone Clustering │    │
-│  └──────────────┘  └────────────┘  └──────────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│                   AI/ML Processing Engine                    │
-│  ┌────────────────┐  ┌──────────────┐  ┌─────────────────┐ │
-│  │ Image Upload   │  │ YOLOv8 Model │  │ Confidence      │ │
-│  │ Processing     │  │ Inference    │  │ Scoring         │ │
-│  └────────────────┘  └──────────────┘  └─────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│              Data Persistence & Analytics                    │
-│  ┌──────────────────┐  ┌────────────────┐  ┌────────────┐  │
-│  │    MongoDB       │  │ H3 Clustering  │  │  Reports   │  │
-│  │   Geospatial DB  │  │ Risk Zones     │  │ Analytics  │  │
-│  └──────────────────┘  └────────────────┘  └────────────┘  │
-└─────────────────────────────────────────────────────────────┘
+### AI Workflow
+
+```text
+Uploaded Image
+      ↓
+Image Processing
+      ↓
+YOLO-Based Detection
+      ↓
+Pothole Verification
+      ↓
+Confidence Score
+      ↓
+Report Status Update
 ```
 
----
+## 👩‍💻 My Role
 
-## 📂 Project Structure
+### Team Lead — Lakshmi Sai Chinmayee Kalangi
 
-```
-RoadCare/
-├── backend/                          # Python FastAPI Backend
-│   ├── app/
-│   │   ├── main.py                  # FastAPI application
-│   │   ├── config/
-│   │   │   ├── database.py          # MongoDB connection
-│   │   │   └── settings.py          # Configuration
-│   │   ├── models/                  # Data models
-│   │   │   ├── user.py
-│   │   │   ├── report.py
-│   │   │   ├── verification.py
-│   │   │   ├── risk_zone.py
-│   │   │   └── repair.py
-│   │   ├── routes/                  # API endpoints
-│   │   │   ├── auth.py
-│   │   │   ├── reports.py
-│   │   │   ├── zones.py
-│   │   │   └── repairs.py
-│   │   ├── services/                # Business logic
-│   │   │   ├── ai_verification_service.py  # YOLOv8 inference
-│   │   │   ├── image_service.py
-│   │   │   └── clustering_service.py
-│   │   └── utils/
-│   ├── requirements.txt
-│   └── run.py
-│
-├── frontend1/                        # React Vite Frontend
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Header.jsx
-│   │   │   ├── Footer.jsx
-│   │   │   ├── LoadingSpinner.jsx
-│   │   │   └── ProtectedRoute.jsx
-│   │   ├── pages/
-│   │   │   ├── HomePage.jsx
-│   │   │   ├── ReportPotholePage.jsx
-│   │   │   ├── AuthorityDashboardPage.jsx
-│   │   │   └── ComplaintDetailPage.jsx
-│   │   ├── context/
-│   │   │   ├── AuthContext.jsx
-│   │   │   └── ThemeContext.jsx
-│   │   ├── services/
-│   │   │   └── apiService.js
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── package.json
-│   └── vite.config.js
-│
-├── .env.example                      # Environment template
-├── .gitignore
-└── README.md                         # This file
-```
+As the Team Lead, I coordinated the development of the project and contributed to its technical implementation.
 
----
+- Led and coordinated the project team.
+- Coordinated project development and task distribution.
+- Contributed to the AI/ML-based pothole detection workflow.
+- Worked on backend API development and report management.
+- Contributed to frontend and backend integration.
+- Implemented and tested report status and repair workflows.
+- Worked on debugging and resolving application issues.
+- Coordinated project documentation and final integration.
 
-## 🎓 Key Workflows
+  ## 🔮 Future Enhancements
 
-### Citizen Report Flow
-1. 📸 User uploads pothole image
-2. 📍 GPS coordinates auto-captured
-3. 🤖 AI instantly verifies damage
-4. ✅ Report submitted with confidence score
-5. 📊 Real-time status tracking
+- Real-time pothole detection using mobile cameras
+- Improved road-damage classification
+- Enhanced map-based visualization
+- Automated repair-priority recommendations
+- Mobile application support
+- Expansion of the training dataset
+- Improved AI model performance
 
-### Authority Review Flow
-1. 📋 Dashboard shows pending reports
-2. 👁️ Authority reviews AI assessment
-3. ✓ Approves or rejects verification
-4. 🗺️ Views clustered risk zones
-5. 🔧 Creates repair actions
+  ## 📄 License
 
----
+This project is licensed under the Apache License 2.0.
 
-## 💻 API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
-- `POST /api/auth/refresh` - Refresh JWT token
-
-### Reports
-- `POST /api/reports` - Submit pothole report (with image)
-- `GET /api/reports` - List all reports (paginated)
-- `GET /api/reports/{id}` - Get report details
-- `PUT /api/reports/{id}/status` - Update report status (authority only)
-
-### Risk Zones
-- `GET /api/zones` - Get all risk zones
-- `GET /api/zones/high-risk` - Get high-severity zones
-- `POST /api/zones/recalculate` - Recalculate zones (authority only)
-
-### Repairs
-- `POST /api/repairs` - Create repair action (authority only)
-- `PUT /api/repairs/{id}` - Update repair status
-- `GET /api/repairs` - List repair actions
-
-**Full API Documentation**: `http://localhost:8000/docs` (Swagger UI)
-
----
-
-## 🧪 Testing
-
-### Backend Testing
-```bash
-cd backend
-pytest tests/ -v
-```
-
-### API Testing with cURL
-```bash
-# Register user
-curl -X POST http://localhost:8000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "John Doe",
-    "email": "john@example.com",
-    "phone": "1234567890",
-    "password": "secure123"
-  }'
-
-# Submit report
-curl -X POST http://localhost:8000/api/reports \
-  -H "Authorization: Bearer YOUR_TOKEN" \
-  -F "image=@pothole.jpg" \
-  -F "latitude=34.0522" \
-  -F "longitude=-118.2437"
-```
-
----
-
-## 📊 Model Performance
-
-| Metric | Value |
-|--------|-------|
-| **mAP@0.5** | 89.3% |
-| **Precision** | 92.1% |
-| **Recall** | 91.8% |
-| **FPS (GPU)** | ~45 |
-| **Model Size** | ~130 MB (YOLOv8x) |
-
----
-
-## 🔒 Security Features
-
-✅ **Authentication**
-- JWT-based token authentication
-- Refresh token mechanism
-- Automatic token expiration
-
-✅ **Authorization**
-- Role-based access control (RBAC)
-- Protected endpoints for authorities
-- Data isolation per user
-
-✅ **Data Protection**
-- Password hashing with bcrypt
-- Secure file upload validation
-- CORS configuration
-- HTTPS-ready
-
----
-
-## 📈 Performance Optimization
-
-- 🚀 **Async I/O** - Non-blocking database operations
-- 📦 **Caching** - Redis support for frequent queries
-- 🎯 **Image Optimization** - Automatic compression and resizing
-- ⚡ **GPU Acceleration** - CUDA support for YOLOv8
-- 🗂️ **Database Indexing** - Geospatial indexes for location queries
-
----
-
-## 🌍 Real-World Applications
-
-✅ **Municipal Road Maintenance** - Automated inspection reports
-✅ **Smart Cities** - Real-time road quality monitoring
-✅ **Insurance Claims** - Objective damage documentation
-✅ **Urban Planning** - Infrastructure assessment data
-✅ **Fleet Management** - Route optimization
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Development Guidelines
-- Follow PEP 8 for Python code
-- Use ESLint for JavaScript/React
-- Write tests for new features
-- Update documentation
-
----
-
-## 📝 Environment Configuration
-
-Create a `.env` file:
-
-```env
-# Database
-MONGODB_URI=mongodb://localhost:27017
-MONGODB_DB_NAME=roadcare
-
-# Authentication
-JWT_SECRET_KEY=your-secret-key-here
-JWT_ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-
-# AI Model
-YOLO_MODEL_PATH=./models/yolov8x.pt
-CONFIDENCE_THRESHOLD=0.60
-
-# File Upload
-MAX_FILE_SIZE_MB=10
-UPLOAD_DIR=./uploads
-
-# API
-API_TITLE=RoadCare API
-API_VERSION=1.0.0
-API_DESCRIPTION=AI-Based Road Damage Detection System
-```
-
----
-
-## 🐛 Troubleshooting
-
-### MongoDB Connection Error
-```
-Error: MongoServerError: connect ECONNREFUSED
-```
-**Solution**: Start MongoDB service:
-```bash
-# Linux/Mac
-brew services start mongodb-community
-
-# Windows
-net start MongoDB
-```
-
-### Port Already in Use
-```bash
-# Kill process on port 8000
-lsof -ti:8000 | xargs kill -9
-
-# Or use different port
-uvicorn app.main:app --port 8001
-```
-
-### YOLO Model Download Issue
-```bash
-# Manual download
-python -c "from ultralytics import YOLO; YOLO('yolov8x.pt')"
-```
-
----
-
-## 📚 Documentation
-
-- [Backend README](backend/README.md) - API & backend details
-- [Frontend README](frontend1/README.md) - UI & component guide
-- [Architecture Documentation](docs/ARCHITECTURE.md)
-- [API Reference](http://localhost:8000/docs)
-
----
-
-## 📊 System Requirements
-
-| Component | Minimum | Recommended |
-|-----------|---------|------------|
-| **CPU** | Intel i5 / Ryzen 5 | Intel i7 / Ryzen 7 |
-| **RAM** | 8 GB | 16 GB DDR4 |
-| **Storage** | 4 GB | 20 GB SSD |
-| **GPU** | None | NVIDIA GTX 1060+ |
-| **Python** | 3.9+ | 3.10+ |
-| **Node.js** | 16+ | 18+ |
-
----
-
-## 🔗 Useful Links
-
-- 📖 [FastAPI Documentation](https://fastapi.tiangolo.com/)
-- ⚛️ [React Documentation](https://react.dev/)
-- 🤖 [YOLOv8 Documentation](https://docs.ultralytics.com/)
-- 🍃 [MongoDB Documentation](https://docs.mongodb.com/)
-- 🎨 [Tailwind CSS](https://tailwindcss.com/)
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
-
-
-
-## 🙏 Acknowledgments
-
-- **YOLOv8** - Ultralytics for advanced object detection
-- **FastAPI** - High-performance async web framework
-- **React & Vite** - Modern frontend development
-- **MongoDB** - Flexible document database
-- **Open-source Community** - Amazing tools and libraries
-
----
-
-<div align="center">
-  
-  ### ⭐ If this project helped you, please star it!
-  
-</div>
