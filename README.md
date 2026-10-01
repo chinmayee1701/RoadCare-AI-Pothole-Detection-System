@@ -449,15 +449,7 @@ python -c "from ultralytics import YOLO; YOLO('yolov8x.pt')"
 
 This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
 
----
 
-## 📧 Support & Contact
-
-- **Issues**: [GitHub Issues](https://github.com/jelsingearun/RoadCare---AI-Based-Road-Damage-Pothole-Detection-System/issues)
-- **Author**: [@jelsingearun](https://github.com/jelsingearun)
-- **Email**: [Contact me via GitHub](https://github.com/jelsingearun)
-
----
 
 ## 🙏 Acknowledgments
 
